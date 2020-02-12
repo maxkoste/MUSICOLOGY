@@ -1,9 +1,9 @@
 # MUSICOLOGY
 
  - Album
-Which the Beatles albums were the most commercially successful? Does the commercial success correspond in any way to features computable from Spotify? 
+what makes a succesfull album. I will look at some of the most iconic and top rated albums pulling data from the rolling stones top 500 list of albums and then comparing their characteristics to the most selling albums of the 2000s. 
 
-Is the album still a meaningful concept? For your favourite artist, check whether the songs within albums are more similar to each other than songs on different albums. Is there a measurable pattern or formula for predicting which track will be first or last?
+Is the album still a meaningful concept I will also check whether the songs within albums are more similar to each other than songs on different albums. Is there a measurable pattern or formula for predicting which track will be first or last?
 
 We will check how a succesfull album is created and what features and similarities between succesfull albums that can be observed. This will be done by gathering data from Spotify from a selection of succesfull albums from the 70s and 60s. I will try and find out if there is a measurable pattern or formula for predicting where a song is placed in a album. 
 

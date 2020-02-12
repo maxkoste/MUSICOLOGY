@@ -22,3 +22,8 @@ David Bowey - the rise and fall of ziggy stardust
 Rolling stones - Let it Bleed
 
 Compare the albums and try to find similarities and characteristics connected to their populairty and see how well the albums hold up today if we look at some of the 2000s most populair albums and their characteristics
+
+this doesn't work for me
+
+
+

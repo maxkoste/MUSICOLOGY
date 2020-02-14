@@ -40,5 +40,16 @@ stones <- stones_old %>% mutate(playlist = "stones_old") %>%
 stones_old %>% summarise(M = mean(danceability), SD = sd(danceability))
 stones_new %>% summarise(M = mean(danceability), SD = sd(danceability))
 
+Stones_new
+     M    SD
+  <dbl> <dbl>
+1 0.558 0.157
+
+Stones_old
+      M    SD
+  <dbl> <dbl>
+1 0.502 0.145
+ 
+ 
 
 

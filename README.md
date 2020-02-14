@@ -49,11 +49,21 @@ stones %>%
 
  ![barplot](barplot_acousticness.png)
  
+ 
+ 
  ![barplot2](instrumentalness.png)
 
  ![loudness](louddance.png)
 
  ![barplot4](liveness.png)
+ 
+ ![energyvalence](energyvalence.png)
+ 
+
+ 
+ 
+ 
+ 
 
 
 

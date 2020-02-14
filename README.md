@@ -41,3 +41,4 @@ stones_old %>% summarise(M = mean(danceability), SD = sd(danceability))
 stones_new %>% summarise(M = mean(danceability), SD = sd(danceability))
 
 
+

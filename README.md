@@ -51,6 +51,7 @@ Stones_old
 1 0.502 0.145
 
 #then i made a barplot to look at the acousticness between both playlists
+
 stones %>%
   ggplot(aes(x = tempo, y = instrumentalness)) + 
   geom_point() + 
@@ -64,6 +65,7 @@ stones %>%
 
  ![barplot](barplot_acousticness.png)
  
+#we can see that there actually is more accousticness on the newer albums which came as a surprise to me it must be because of some error with my ploting since clearly it should be the other way around. 
 
  
  

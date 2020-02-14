@@ -51,13 +51,13 @@ stones %>%
  
 #we can see that there actually is more accousticness on the newer albums which came as a surprise to me, I wonder how that came to be. 
 
-![barplot](instrumentalness.png)
+ ![barplot](instrumentalness.png)
 
 #When we look at instrumentalness a obvious difference appears, here we can see that the newer albums use less analogue instrumentation
 
-![loudness/danceability](louddance.png)
+ ![loudness/danceability](louddance.png)
 
-![liveness](liveness.png)
+ ![liveness](liveness.png)
 
 
 

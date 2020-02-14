@@ -59,6 +59,8 @@ stones %>%
  
  ![energyvalence](energyvalence.png)
  
+ in the latest graph we see that the newer song have the loudest songs and the outliers on the loudness scale are simialir between both the new and the old. The newer songs also seems to be higher in danceablity being more clustered towards the end of the spectrum while the older songs are more centered on the x-axis. Alot of the more energetic/high in valence songs are also amongst the newer releases but there are not a significant difference. 
+ 
 
  
  

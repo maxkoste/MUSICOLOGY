@@ -68,7 +68,10 @@ stones %>%
 
 ![barplot](instrumentalness.png)
 
- 
+When we look at instrumentalness a obvious difference appears, here we can see that the newer albums use less analogue instrumentation
+
+![loudness/danceability](louddance.png)
+
  
 
 

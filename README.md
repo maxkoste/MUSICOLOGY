@@ -51,7 +51,7 @@ stones %>%
  
  ![barplot2](instrumentalness.png)
 
- ![barplot3](louddance.png)
+ ![loudness](louddance.png)
 
  ![barplot4](liveness.png)
 

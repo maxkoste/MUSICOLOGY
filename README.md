@@ -50,9 +50,21 @@ Stones_old
   <dbl> <dbl>
 1 0.502 0.145
 
+#then i made a barplot to look at the acousticness between both playlists
+stones %>%
+  ggplot(aes(x = tempo, y = instrumentalness)) + 
+  geom_point() + 
+  geom_smooth() + 
+  facet_wrap('playlist')
+
+stones %>%
+  ggplot(aes(x=playlist, y = acousticness)) +
+  geom_bar(stat="identity", fill="steelblue", width = 0.5)
+
+
  ![barplot](barplot_acousticness.png)
  
- hej allihoppa
+
  
  
 

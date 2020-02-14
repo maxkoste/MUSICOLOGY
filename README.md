@@ -5,21 +5,6 @@ what makes a succesfull album. I will look at some of the most iconic and top ra
 
 We will check how a succesfull album is created and what features and similarities between succesfull albums that can be observed. This will be done by gathering data from Spotify from a selection of succesfull albums from the 70s and 60s. This will then be compared to the top albums of the 2000s also from the rolling stones. 
 
-Pink Floyd - Dark side of the Moon
-The beatles - abbey road
-The beatles - Srg pepper lonly heart club band
-the eagles - hotel california
-Led Zeppelin - II
-Led Zeppelin - IV
-Marvin Gaye - Whats going on 
-TRex - Electric Warrior 
-Fleetwood mac - Rumors
-The Velvet underground - The velvet underground
-David Bowey - the rise and fall of ziggy stardust
-Rolling stones - Let it Bleed
-
-
-
 Compare the albums and try to find similarities and characteristics connected to their populairty and see how well the albums hold up today if we look at some of the 2000s most populair albums and their characteristics. 
 
 The first thing we do is to gather data from two playlist I created with old songs (songs released no later then 1980) that the rolling stones ranked as some of the best albums and one playlist with songs from 2010 - 2020, also ranked high by the rolling stones. Then we compare the general information we get from looking at the data to get some indication of general differences.

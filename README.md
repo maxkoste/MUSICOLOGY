@@ -3,11 +3,9 @@
  - Album
 what makes a succesfull album. I will look at some of the most iconic and top rated albums pulling data from the rolling stones top 500 list of albums and then comparing their characteristics to a similair list from the 2000s. 
 
-We will check how a succesfull album is created and what features and similarities between succesfull albums that can be observed. This will be done by gathering data from Spotify from a selection of succesfull albums from the 70s and 60s. This will then be compared to the top albums of the 2000s also from the rolling stones. 
+We will check for features and similarities between succesfull albums that can be observed. This will be done by gathering data from Spotify from a selection of succesfull albums from the 70s and 60s. This will then be compared to the top albums of the 2000s also from the rolling stones. 
 
-Compare the albums and try to find similarities and characteristics connected to their populairty and see how well the albums hold up today if we look at some of the 2000s most populair albums and their characteristics. 
-
-The first thing we do is to gather data from two playlist I created with old songs (songs released no later then 1980) that the rolling stones ranked as some of the best albums and one playlist with songs from 2010 - 2020, also ranked high by the rolling stones. Then we compare the general information we get from looking at the data to get some indication of general differences.
+The first thing we do is to gather data from two playlist I created with old albums (released no later then 1980) that the rolling stones ranked as some of the best albums and one playlist with albums from 2010 - 2020, also ranked high by the rolling stones. Then we compare the general information we get from looking at the data to get some indication of any differences or similairites that can be found.
 
 library(tidyverse)
 library(spotifyr)
@@ -25,12 +23,24 @@ stones <- stones_old %>% mutate(playlist = "stones_old") %>%
 stones_old %>% summarise(M = mean(danceability), SD = sd(danceability))
 stones_new %>% summarise(M = mean(danceability), SD = sd(danceability))
 
-Stones_new
+first we take a look at the mean values and standard deviation for some of the common characteristics.
+
+#stones new (instrumentalness)
+       M    SD
+   <dbl> <dbl>
+1 0.0783 0.209
+
+#stones old (instrumentalness)
+      M    SD
+  <dbl> <dbl>
+1 0.124 0.257
+
+#stones new danceability
      M    SD
   <dbl> <dbl>
 1 0.558 0.157
 
-Stones_old
+#Stones_old danceability
       M    SD
   <dbl> <dbl>
 1 0.502 0.145

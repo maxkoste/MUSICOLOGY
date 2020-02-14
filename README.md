@@ -49,6 +49,10 @@ Stones_old
       M    SD
   <dbl> <dbl>
 1 0.502 0.145
+
+ ![barplot](barplot_acousticness.png)
+ 
+ hej allihoppa
  
  
 

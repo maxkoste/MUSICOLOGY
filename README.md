@@ -73,9 +73,19 @@ stones %>%
 
 
  
- in the latest graph we see that the loudest songs in our data set comes from the new playlist and the more quiet outliers on the loudness scale are simialir between both the new and the old. The newer songs also seems to be higher in danceablity being more clustered towards the end of the spectrum while the older songs are more centered on the x-axis. Alot of the more energetic/high in valence songs are also amongst the newer releases but there is not a big difference between the two.
+in the latest graph we see that the loudest songs in our data set comes from the new playlist and the more quiet outliers on the loudness scale are simialir between both the new and the old, with the exeption of an more extreme outlier on the old playlist down by the bottom of the y axis. The newer songs also seems to be higher in danceablity being more clustered towards the end of the x-axis while the older songs are more centered on the x-axis. Alot of the more energetic/high in valence songs are also amongst the newer releases but there is not a big difference between the two.
  
+ Stones_new (loudness)
+      M    SD
+  <dbl> <dbl>
+1 -9.13  4.18
 
+stones_old (loudness)
+      M    SD
+  <dbl> <dbl>
+1 -10.1  3.64
+
+The standard deviation is pretty high on both of these playlists when it comes to loudness. 
 
  
  

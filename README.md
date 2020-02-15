@@ -17,6 +17,7 @@ Sys.setenv(SPOTIFY_CLIENT_SECRET = '1fdfce6c747048bbb3e0cdb4bb7596aa')
 stones_old <- get_playlist_audio_features('spotify', '4M2hsYvNxtTQYYdJXM7nZf')
 stones_new <- get_playlist_audio_features('spotify', '5O8ZKa73hlfLYXnRLbU1xk')
 
+<>
 stones <- stones_old %>% mutate(playlist = "stones_old") %>%
   bind_rows(stones_new %>% mutate(playlist = "stones_new"))
 
@@ -28,6 +29,7 @@ first we take a look at the mean values and standard deviation for some of the c
 
 
 #stones new (instrumentalness)
+
        M    SD
    <dbl> <dbl>
 1 0.0783 0.209
@@ -35,6 +37,7 @@ first we take a look at the mean values and standard deviation for some of the c
 
 
 #stones old (instrumentalness)
+
       M    SD
   <dbl> <dbl>
 1 0.124 0.257
@@ -42,6 +45,7 @@ first we take a look at the mean values and standard deviation for some of the c
 
 
 #stones new danceability
+
      M    SD
   <dbl> <dbl>
 1 0.558 0.157
@@ -49,6 +53,7 @@ first we take a look at the mean values and standard deviation for some of the c
 
 
 #Stones_old danceability
+
       M    SD
   <dbl> <dbl>
 1 0.502 0.145

@@ -64,13 +64,18 @@ first we take a look at the mean values and standard deviation for some of the c
 
 
 `````
-
-
-
-
 stones %>%
   ggplot(aes(x=playlist, y = acousticness)) +
   geom_bar(stat="identity", fill="steelblue", width = 0.5)
+  
+stones %>%
+  ggplot(aes(x=playlist, y = instrumentalness)) +
+  geom_bar(stat="identity", fill="steelblue", width = 0.5)
+  
+stones %>%
+  ggplot(aes(x=playlist, y = liveness)) +
+  geom_bar(stat="identity", fill="steelblue", width = 0.2)
+
 `````
 
 
@@ -82,6 +87,15 @@ stones %>%
  ![barplot4](liveness.png)
  
  Then I created a scatterplot to include some more dimensions of the data.
+ 
+ `````
+stones %>%
+  ggplot(aes(x = danceability, y = loudness, col = playlist, size = (valence/energy))) + 
+  geom_point() + 
+  geom_rug(size = 0.1)+
+  facet_wrap('playlist')
+
+`````
  
  ![energyvalence](Rplot.png)
 

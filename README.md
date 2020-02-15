@@ -7,8 +7,8 @@ We will check for features and similarities between succesfull albums that can b
 
 The first thing we do is to gather data from two playlist I created with old albums (released no later then 1980) that the rolling stones ranked as some of the best albums and one playlist with albums from 2010 - 2020, also ranked high by the rolling stones. Then we compare the general information we get from looking at the data to get some indication of any differences or similairites that can be found.
 
-
-```library(tidyverse)
+````
+library(tidyverse)
 library(spotifyr)
 
 Sys.setenv(SPOTIFY_CLIENT_ID = 'bd931293a2ec4649a3069f6a137bd0be')
@@ -21,7 +21,9 @@ stones <- stones_old %>% mutate(playlist = "stones_old") %>%
   bind_rows(stones_new %>% mutate(playlist = "stones_new"))
 
 stones_old %>% summarise(M = mean(danceability), SD = sd(danceability))
-stones_new %>% summarise(M = mean(danceability), SD = sd(danceability))```
+stones_new %>% summarise(M = mean(danceability), SD = sd(danceability))
+````
+
 
 
 first we take a look at the mean values and standard deviation for some of the common characteristics.
@@ -63,7 +65,7 @@ first we take a look at the mean values and standard deviation for some of the c
 
 
 
- ```stones %>%
+ stones %>%
   ggplot(aes(x = tempo, y = instrumentalness)) + 
   geom_point() + 
   geom_smooth() + 
@@ -71,9 +73,9 @@ first we take a look at the mean values and standard deviation for some of the c
 
 
 
-```stones %>%
+stones %>%
   ggplot(aes(x=playlist, y = acousticness)) +
-  geom_bar(stat="identity", fill="steelblue", width = 0.5)`
+  geom_bar(stat="identity", fill="steelblue", width = 0.5)
 
 
 

@@ -68,7 +68,7 @@ first we take a look at the mean values and standard deviation for some of the c
   geom_point() + 
   geom_smooth() + 
   facet_wrap('playlist')
-<dbl>
+
 
 
 stones %>%

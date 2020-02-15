@@ -7,6 +7,7 @@ We will check for features and similarities between succesfull albums that can b
 
 The first thing we do is to gather data from two playlist I created with old albums (released no later then 1980) that the rolling stones ranked as some of the best albums and one playlist with albums from 2010 - 2020, also ranked high by the rolling stones. Then we compare the general information we get from looking at the data to get some indication of any differences or similairites that can be found.
 
+
 library(tidyverse)
 library(spotifyr)
 
@@ -16,36 +17,47 @@ Sys.setenv(SPOTIFY_CLIENT_SECRET = '1fdfce6c747048bbb3e0cdb4bb7596aa')
 stones_old <- get_playlist_audio_features('spotify', '4M2hsYvNxtTQYYdJXM7nZf')
 stones_new <- get_playlist_audio_features('spotify', '5O8ZKa73hlfLYXnRLbU1xk')
 
-
 stones <- stones_old %>% mutate(playlist = "stones_old") %>%
   bind_rows(stones_new %>% mutate(playlist = "stones_new"))
 
 stones_old %>% summarise(M = mean(danceability), SD = sd(danceability))
 stones_new %>% summarise(M = mean(danceability), SD = sd(danceability))
 
+
 first we take a look at the mean values and standard deviation for some of the common characteristics.
+
 
 #stones new (instrumentalness)
        M    SD
    <dbl> <dbl>
 1 0.0783 0.209
 
+
+
 #stones old (instrumentalness)
       M    SD
   <dbl> <dbl>
 1 0.124 0.257
+
+
 
 #stones new danceability
      M    SD
   <dbl> <dbl>
 1 0.558 0.157
 
+
+
 #Stones_old danceability
       M    SD
   <dbl> <dbl>
 1 0.502 0.145
 
+
+
 #then i made a barplot to look at the acousticness between both playlists
+
+
 
  stones %>%
   ggplot(aes(x = tempo, y = instrumentalness)) + 
@@ -53,9 +65,13 @@ first we take a look at the mean values and standard deviation for some of the c
   geom_smooth() + 
   facet_wrap('playlist')
 
+
+
 stones %>%
   ggplot(aes(x=playlist, y = acousticness)) +
   geom_bar(stat="identity", fill="steelblue", width = 0.5)`
+
+
 
  ![barplot](barplot_acousticness.png)
  
@@ -85,6 +101,7 @@ stones_old (loudness)
       M    SD
   <dbl> <dbl>
 1 -10.1  3.64
+
 
 The standard deviation is pretty high on both of these playlists when it comes to loudness. 
 

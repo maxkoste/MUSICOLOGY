@@ -60,14 +60,13 @@ stones %>%
  ![barplot](barplot_acousticness.png)
  
  
- 
  ![barplot2](instrumentalness.png)
-
- ![loudness](louddance.png)
  
  ![barplot4](liveness.png)
  
- ![energyvalence](energyvalence.png)
+ Then I created a scatterplot to include some more dimensions of the data.
+ 
+ ![energyvalence](Rplot.png)
 
  
 

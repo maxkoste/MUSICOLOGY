@@ -26,7 +26,7 @@ stones_new %>% summarise(M = mean(danceability), SD = sd(danceability))
 
 
 
-first we take a look at the mean values and standard deviation for some of the common characteristics.
+first we take a look at the mean values and standard deviation for some of the common characteristics in this case we look at intrumentalness and danceability which should be pretty similair between the two.
 `````
 #stones new (instrumentalness)
 
@@ -58,9 +58,9 @@ first we take a look at the mean values and standard deviation for some of the c
   <dbl> <dbl>
 1 0.502 0.145
 `````
+As Expected they are pretty similair. There is a small difference in instrumentalness, meaning that the newer playlist has more vocals then the old. When it comes to danceability there is not much of a difference. The standard deviation is also pretty low. 
 
-
-#then i made some barplots to look at the acousticness, instrumentalness and the liveness between both playlists
+Then i made some barplots to look at the acousticness, instrumentalness and the liveness between both playlists
 
 
 `````
@@ -100,10 +100,7 @@ stones %>%
  ![energyvalence](Rplot.png)
 
  
-
-
- 
-in the latest graph we see that the loudest songs in our data set comes from the new playlist and the more quiet outliers on the loudness scale are simialir between both the new and the old, with the exeption of an more extreme outlier on the old playlist down by the bottom of the y axis. The newer songs also seems to be higher in danceablity being more clustered towards the end of the x-axis while the older songs are more centered on the x-axis. Alot of the more energetic/high in valence songs are also amongst the newer releases but there is not a big difference between the two.
+in the latest graph we see that the loudest songs in our data set comes from the new playlist and the more quiet outliers on the loudness scale are simialir between both the new and the old, with the exeption of an more extreme outlier on the old playlist down by the bottom of the y axis. The newer songs also seems to be higher in danceablity being more clustered towards the end of the x-axis while the older songs are more centered on the x-axis. Alot of the more energetic/high in valence songs are also amongst the newer releases but there is not a big difference between the two. 
  
  ```
  Stones_new (loudness)

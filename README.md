@@ -65,10 +65,9 @@ stones %>%
 
  ![loudness](louddance.png)
  
- ![energyvalence](energyvalence.png)
-
  ![barplot4](liveness.png)
  
+ ![energyvalence](energyvalence.png)
 
  
 

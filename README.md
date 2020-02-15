@@ -17,7 +17,6 @@ Sys.setenv(SPOTIFY_CLIENT_SECRET = '1fdfce6c747048bbb3e0cdb4bb7596aa')
 stones_old <- get_playlist_audio_features('spotify', '4M2hsYvNxtTQYYdJXM7nZf')
 stones_new <- get_playlist_audio_features('spotify', '5O8ZKa73hlfLYXnRLbU1xk')
 
-<>
 stones <- stones_old %>% mutate(playlist = "stones_old") %>%
   bind_rows(stones_new %>% mutate(playlist = "stones_new"))
 
@@ -69,7 +68,7 @@ first we take a look at the mean values and standard deviation for some of the c
   geom_point() + 
   geom_smooth() + 
   facet_wrap('playlist')
-
+<dbl>
 
 
 stones %>%

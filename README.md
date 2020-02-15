@@ -27,8 +27,7 @@ stones_new %>% summarise(M = mean(danceability), SD = sd(danceability))
 
 
 first we take a look at the mean values and standard deviation for some of the common characteristics.
-
-
+`````
 #stones new (instrumentalness)
 
        M    SD
@@ -58,7 +57,7 @@ first we take a look at the mean values and standard deviation for some of the c
       M    SD
   <dbl> <dbl>
 1 0.502 0.145
-
+`````
 
 
 #then i made a barplot to look at the acousticness between both playlists

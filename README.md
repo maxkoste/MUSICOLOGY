@@ -60,15 +60,11 @@ first we take a look at the mean values and standard deviation for some of the c
 `````
 
 
-#then i made a barplot to look at the acousticness between both playlists
+#then i made some barplots to look at the acousticness, instrumentalness and the liveness between both playlists
 
 
 `````
- stones %>%
-  ggplot(aes(x = tempo, y = instrumentalness)) + 
-  geom_point() + 
-  geom_smooth() + 
-  facet_wrap('playlist')
+
 
 
 

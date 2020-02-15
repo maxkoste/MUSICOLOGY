@@ -21,7 +21,7 @@ stones <- stones_old %>% mutate(playlist = "stones_old") %>%
   bind_rows(stones_new %>% mutate(playlist = "stones_new"))
 
 stones_old %>% summarise(M = mean(danceability), SD = sd(danceability))
-stones_new %>% summarise(M = mean(danceability), SD = sd(danceability)) 
+stones_new %>% summarise(M = mean(danceability), SD = sd(danceability))```
 
 
 first we take a look at the mean values and standard deviation for some of the common characteristics.
@@ -63,7 +63,7 @@ first we take a look at the mean values and standard deviation for some of the c
 
 
 
- stones %>%
+ ```stones %>%
   ggplot(aes(x = tempo, y = instrumentalness)) + 
   geom_point() + 
   geom_smooth() + 
@@ -71,7 +71,7 @@ first we take a look at the mean values and standard deviation for some of the c
 
 
 
-stones %>%
+```stones %>%
   ggplot(aes(x=playlist, y = acousticness)) +
   geom_bar(stat="identity", fill="steelblue", width = 0.5)`
 

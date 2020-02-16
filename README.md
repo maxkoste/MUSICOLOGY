@@ -64,27 +64,32 @@ Then i made some barplots to look at the acousticness, instrumentalness and the 
 
 
 `````
-stones %>%
-  ggplot(aes(x=playlist, y = acousticness)) +
-  geom_bar(stat="identity", fill="steelblue", width = 0.5)
   
 stones %>%
-  ggplot(aes(x=playlist, y = instrumentalness)) +
-  geom_bar(stat="identity", fill="steelblue", width = 0.5)
-  
-stones %>%
-  ggplot(aes(x=playlist, y = liveness)) +
-  geom_bar(stat="identity", fill="steelblue", width = 0.2)
+  ggplot(aes(x = energy, fill = playlist)) + 
+  geom_histogram(binwidth = 0.1, position = "dodge")
 
+stones %>%
+  ggplot(aes(x = liveness, fill = playlist)) + 
+  geom_histogram(binwidth = 0.1, position = "dodge")
+  
+stones %>%
+  ggplot(aes(x = acousticness, fill = playlist)) + 
+  geom_histogram(binwidth = 0.1, position = "dodge")
+  
+stones %>%
+  ggplot(aes(x = instrumentalness, fill = playlist)) + 
+  geom_histogram(binwidth = 0.1, position = "dodge")
+  
 `````
+![histogram_energy](histogram_energy.png)
 
+![histogram_liveness](histogram_liveness.png)
 
- ![barplot](barplot_acousticness.png)
- 
- 
- ![barplot2](instrumentalness.png)
- 
- ![barplot4](liveness.png)
+![histogram_acousticness](histogram_acousticness.png)
+
+![histogram_instrumentalness](histogram_instrumentalness.png)
+
  
  Then I created a scatterplot to include some more dimensions of the data.
  
@@ -123,7 +128,7 @@ Stuff to do: deal with the overploting issue by adding aesthetics
 - position = "jitter"
 etc...
  
-
+Compare lenghts of the songs
 
 
 

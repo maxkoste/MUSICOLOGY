@@ -123,12 +123,8 @@ stones_old (loudness)
 
 The standard deviation is pretty high on both of these playlists when it comes to loudness. 
 
-Stuff to do: deal with the overploting issue by adding aesthetics
-- alpha
-- position = "jitter"
-etc...
+
  
-Compare lenghts of the songs
 
 
 

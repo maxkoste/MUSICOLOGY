@@ -1,7 +1,7 @@
 # MUSICOLOGY
 
- - Album
-what makes a succesfull album. I will look at some of the most iconic and top rated albums pulling data from the rolling stones top 500 list of albums and then comparing their characteristics to a similair list from the 2000s. 
+
+What makes a succesfull album. I will look at some of the most iconic and top rated albums pulling data from the rolling stones magazine top 500 list of albums and then comparing their characteristics to a similair list by the rolling stones magazine from the 2000s. 
 
 We will check for features and similarities between succesfull albums that can be observed. This will be done by gathering data from Spotify from a selection of succesfull albums from the 70s and 60s. This will then be compared to the top albums of the 2000s also from the rolling stones. 
 

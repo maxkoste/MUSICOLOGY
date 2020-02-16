@@ -96,13 +96,13 @@ stones %>%
  `````
 stones %>%
   ggplot(aes(x = danceability, y = loudness, col = playlist, size = (valence/energy))) + 
-  geom_point() + 
+  geom_point(alpha = 0.6, position = "jitter") + 
   geom_rug(size = 0.1)+
   facet_wrap('playlist')
 
 `````
  
- ![energyvalence](Rplot.png)
+ ![scatter_loudness](scatter_loudness.png)
 
  
 in the latest graph we see that the loudest songs in our data set comes from the new playlist and the more quiet outliers on the loudness scale are simialir between both the new and the old, with the exeption of an more extreme outlier on the old playlist down by the bottom of the y axis. The newer songs also seems to be higher in danceablity being more clustered towards the end of the x-axis while the older songs are more centered on the x-axis. Alot of the more energetic/high in valence songs are also amongst the newer releases but there is not a big difference between the two. 

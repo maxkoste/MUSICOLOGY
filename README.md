@@ -123,6 +123,11 @@ stones_old (loudness)
 
 The standard deviation is pretty high on both of these playlists when it comes to loudness. 
 
+Think about this:
+
+"Hi Max,
+
+I think you are exploring a very interesting research question. Perhaps it would be good to specify that you’re considering a certain flavour of albums as Rolling Stone magazine is biased towards rock/pop music. Moreover, it seems to me that you’re not yet making comparisons that can drive you towards the answer to your question. Mainly because you are comparing songs, rather than albums! The feature extraction of Spotify also gives you album names, what happens when you group the playlists by album and make comparisons then? For example, you could take means of interesting features of each album that is included in each playlist and then see how that differ/are alike. If you structure your analysis like this you can make many really interesting visualisations that might even show trends in rock music as a whole, especially if you arrange the albums by release date. It would be really sick to see how Rolling Stone’s music preference has evolved over the decades."
 
  
 

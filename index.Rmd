@@ -1,0 +1,100 @@
+---
+title:  'Computational Musicology'
+author: 'Max Koste'
+date:   'February--March 2020'
+output: 
+    flexdashboard::flex_dashboard:
+        storyboard: true
+        theme: flatly
+---
+
+```{r setup}
+# In order to use these packages, we need to install flexdashboard, plotly, and Cairo.
+library(tidyverse)
+library(plotly)
+library(spotifyr)
+library(compmus)
+library(shiny)
+library(shinydashboard)
+source('spotify.R')
+```
+
+### Introduction
+
+What makes a succesfull album. I will look at some of the most iconic and top rated albums pulling data from the rolling stones magazine top 500 list of albums and then comparing their characteristics to a similair list by the rolling stones magazine from the 2000s. 
+
+We will check for features and similarities between succesfull albums that can be observed. This will be done by gathering data from Spotify from a selection of succesfull albums from the 70s and 60s. This will then be compared to the top albums of the 2000s also from the rolling stones. 
+
+```{r}
+stones_old <- get_playlist_audio_features('spotify', '4M2hsYvNxtTQYYdJXM7nZf')
+stones_new <- get_playlist_audio_features('spotify', '5O8ZKa73hlfLYXnRLbU1xk')
+
+
+stones <- stones_old %>% mutate(playlist = "stones_old") %>%
+  bind_rows(stones_new %>% mutate(playlist = "stones_new"))
+```
+
+
+***
+
+What can we see when it comes to the newer and older top charting albums and tracks.
+
+### The newer tracks are louder but not that much more danceable
+in this graph we see that the loudest songs in our data set comes from the new playlist and the more quiet outliers on the loudness scale are simialir between both the new and the old, with the exeption of an more extreme outlier on the old playlist down by the bottom of the y axis. The newer songs also seems to be higher in danceablity being more clustered towards the end of the x-axis while the older songs are more centered on the x-axis. Alot of the more energetic/high in valence songs are also amongst the newer releases but there is not a big difference between the two. 
+
+```{r}
+
+theme_max <- function() {
+  theme_minimal() +
+    theme(
+      text = element_text(color = "gray25"),
+      plot.subtitle = element_text(size = 12),
+      plot.caption = element_text(color = "gray30"),
+      plot.background = element_rect(fill = "gray95"),
+      plot.margin = unit(c(5, 10, 5, 10), units = "mm")
+      
+    )
+}
+
+Rock <-
+stones %>%
+  ggplot(aes(x = danceability, y = loudness, col = playlist, size = (valence/energy))) + 
+  geom_point(alpha = 0.6, position = "jitter") + 
+  geom_rug(size = 0.1)+
+  facet_wrap('playlist')+
+  theme_max()
+
+ggplotly(Rock)
+
+```
+
+### Chromagram
+A chromagram of the song Something by the beatles. 
+```{r}
+
+wo <- 
+    get_tidy_audio_analysis('0pNeVovbiZHkulpGeOx1Gj') %>% 
+    select(segments) %>% unnest(segments) %>% 
+    select(start, duration, pitches)
+
+wo %>% 
+    mutate(pitches = map(pitches, compmus_normalise, 'manhattan')) %>% 
+    compmus_gather_chroma %>% 
+    ggplot(
+        aes(
+            x = start + duration / 2, 
+            width = duration, 
+            y = pitch_class, 
+            fill = value)) + 
+    geom_tile() +
+    labs(x = 'Time (s)', y = NULL, fill = 'Magnitude') +
+    theme_minimal()
+```
+
+
+
+
+### Conclusion
+From what I have found the most noticeble difference is that the music is louder and more spread out when it comes to valence and energy. Also the difference in danceability between tracks are higher. 
+
+

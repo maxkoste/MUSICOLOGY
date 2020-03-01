@@ -121,7 +121,7 @@ ggplot(stones_old, aes(x = valence, y = track.album.name)) +
 ```
 
 ***
-the division of valence is quite varied amongst the albums and only dark side of the moon seems to be extreme in being concentrated towards the lower end of the spectrum. Hotel california is also interseting since its valence is divided on each end of the spectrum without any concentration in the middle. Here is also the mean valence of the 5 albums with the highest mean.
+the division of valence is quite varied amongst the albums and only dark side of the moon seems to be extreme in being concentrated towards the lower end of the spectrum. Hotel california is also interseting since its valence is divided on each end of the spectrum without any concentration in the middle. Here is also the mean valence of the 5 albums with the highest mean. 
 
 ```{r}
 stones_old%>%

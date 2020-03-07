@@ -9,7 +9,6 @@ output:
 ---
 
 ```{r setup}
-# In order to use these packages, we need to install flexdashboard, plotly, and Cairo.
 library(tidyverse)
 library(knitr)
 library(plotly)

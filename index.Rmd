@@ -39,7 +39,7 @@ theme_max <- function() {
 
 ```
 
-### Mean Mr Mustard Keyprofile
+### Looking at keys and noticing that Mean Mr Mustard by the beatles doesnt like to get keyprofiled. 
 ```{r}
 circshift <- function(v, n) {if (n == 0) v else c(tail(v, n), head(v, -n))}
                                     
@@ -146,10 +146,22 @@ mr_mustard %>%
     scale_fill_viridis_c(option = 'E', guide = 'none') +
     theme_max() +
     labs(x = 'Time (s)', y = '')
+
+stones%>% 
+  ggplot(aes(x = key_name, fill = key_mode)) + 
+  geom_histogram(stat = "count") + 
+  facet_wrap("playlist") + 
+  labs(
+    x = "Key Name",
+    y = "Count",
+    fill = "Key Mode") + 
+  theme_max()
 ```
 
 *** 
-Mean Mr Mustard is the song with the highest valence in our corpus so lets look at its key structure.
+
+Mean Mr Mustard is the song with the highest valence in our corpus so lets look at its key structure. 
+
 ```{r}
 
 stones%>%
@@ -161,9 +173,13 @@ stones%>%
 
 ```
 
-As we can see it is giving use some strange readings since we have both G#m and G in the same section which is very strange. 
+As we can see it is giving use some strange readings since we have both G#m and G in the same section which is very strange. The piece is analysied from bigger segments in order to figure out what key it is in. I will have to further investigate by trying different combinations of normalisations and distances. 
 
-### What is the SD and Mean Bpm between our old and modern hits?
+On the histogram we see the number of different keys in our corpus together with if its minor or major indicated by colour. Could not get the colour to be either major/minor, will have to look in to that soo I dont have 1000 colour profiles. 
+
+In the old albums C, D and G major are the clear favourites but in the modern albums we see more minor keys but the most popular key is still in a major key, C# major. 
+
+### What is the SD and Mean Bpm between our old and modern hits? 
 ```{r}
 stones_old_analysis <-
     get_playlist_audio_features(
@@ -178,8 +194,8 @@ stones_new_analysis <-
     slice(1:30) %>% 
     add_audio_analysis()
 pop_music <-
-    stones_old_analysis %>% mutate(genre = "60s/70s") %>%
-    bind_rows(stones_new_analysis %>% mutate(genre = "Modern"))
+    stones_old_analysis %>% mutate(Released = "60s/70s") %>%
+    bind_rows(stones_new_analysis %>% mutate(Released = "2010s"))
 ```
 
 ```{r}
@@ -196,7 +212,7 @@ pop_music %>%
         aes(
             x = tempo, 
             y = tempo_section_sd, 
-            colour = genre, 
+            colour = Released, 
             alpha = loudness)) +
     geom_point(aes(size = duration / 60)) + 
     geom_rug() + 
@@ -205,12 +221,18 @@ pop_music %>%
     labs(
         x = 'Mean Tempo (bpm)', 
         y = 'SD Tempo', 
-        colour = 'Genre', 
+        colour = 'Released', 
         size = 'Duration (min)', 
         alpha = 'Volume (dBFS)')
+
+
 ```
 
-### Timbre Coefficent 
+
+***
+Here we look at some of the different metrics in between our playlist with popular albums from the 60s/70s and compare it to our popular modern albums. Our goal here is to look at the standard deviation and our mean when it comes to tempo. For investigation I've added some more dimensions to the data with Duration in min and volume. 
+
+### Looking at Timbre Coefficent between the old and new albums
 ```{r}
 pop_music %>% 
     mutate(
@@ -220,15 +242,18 @@ pop_music %>%
                 compmus_summarise,
                 timbre,
                 method = 'mean')) %>%
-    select(genre, timbre) %>% 
+    select(Released, timbre) %>% 
     compmus_gather_timbre %>% 
-    ggplot(aes(x = basis, y = value, fill = genre)) +
+    ggplot(aes(x = basis, y = value, fill = Released)) +
     geom_violin() +
     theme_max ()+
     scale_fill_viridis_d() +
-    labs(x = 'Spotify Timbre Coefficients', y = '', fill = 'Genre')
+    labs(x = 'Spotify Timbre Coefficients', y = '', fill = 'Released')
 ```
 
+***
+
+Looking at this we see that there is actually some difference in timbre between the old and the new which comes to no surprise. Around c02 there is a lot of difference in how the value is concentrated, but we also see similairites in the values above c06.
 
 ### Otis reading rock me baby
 
@@ -263,7 +288,7 @@ bzt %>%
     geom_tile() +
     labs(x = 'Time (s)', y = NULL, fill = 'Magnitude') +
     scale_fill_viridis_c(option = 'E') +
-    theme_classic()
+    theme_max()
 ```
 
 
@@ -280,7 +305,7 @@ bzt %>%
     geom_tile() +
     coord_fixed() +
     scale_fill_viridis_c(option = 'E', guide = 'none') +
-    theme_classic() +
+    theme_max() +
     labs(x = '', y = '')
 ```
 
@@ -300,11 +325,18 @@ stones <- stones_old %>% mutate(playlist = "stones_old") %>%
 ggplot(stones_old, aes(x = valence, y = track.album.name)) + 
   geom_joy() + 
   theme_joy() +
-  ggtitle("The division of valence")+
+  ggtitle("Old Albums")+
   theme_max()+
   theme(plot.margin = margin(1 ,1 , 1, 1, "cm"), axis.text = element_text(size = 5))+
   labs(y = "Album Names", x = "Valence")
   
+ggplot(stones_new, aes(x = valence, y = track.album.name)) + 
+  geom_joy() + 
+  theme_joy() +
+  ggtitle("New Albums")+
+  theme_max()+
+  theme(plot.margin = margin(1 ,1 , 1, 1, "cm"), axis.text = element_text(size = 10))+
+  labs(y = "Album Names", x = "Valence")
 
 ```
 
@@ -318,22 +350,6 @@ stones_old%>%
   head(5)%>%
   kable()
 ```
-
-### The division of valence between the newer albums
-
-```{r}
-ggplot(stones_new, aes(x = valence, y = track.album.name)) + 
-  geom_joy() + 
-  theme_joy() +
-  ggtitle("The division of valence")+
-  theme_max()+
-  theme(plot.margin = margin(1 ,1 , 1, 1, "cm"), axis.text = element_text(size = 10))+
-  labs(y = "Album Names", x = "Valence")
-  
-
-```
-
-***
 
 Where the older albums were varied the newer albums are more predictable since they are more or less centered towards the middle of the scale with variying degrees of concentration. The albums are either in the middle or towards the lower end of the spectrum. maybe indicating a shift in trends towards more gloomy music. Here we can also see values for the 5 albums with the highest mean valence.
 

@@ -65,6 +65,13 @@ mean_mr_mustard %>%
     labs(x = 'Time (s)', y = 'Tempo (BPM)') +
     theme_max()
 
+top_songs %>%
+  ggplot(aes(x = tempo, fill = playlist)) + 
+  geom_histogram()+ 
+  ggtitle("Tempo") + 
+  facet_wrap("playlist") + 
+  theme_max()
+
 ```
 
 
@@ -210,7 +217,7 @@ As we can see it is giving use some strange readings since we have both G#m and 
 
 On the histogram we see the number of different keys in our corpus together with if its minor or major indicated by colour. Could not get the colour to be either major/minor, will have to look in to that soo I dont have 1000 colour profiles. 
 
-In the old albums C, D and G major are the clear favourites but in the modern albums we see more minor keys but the most popular key is still in a major key, C# major. 
+
 
 ### What is the SD and Mean Bpm between our playlists? 
 ```{r}
@@ -348,7 +355,7 @@ This song is pretty repeatative so there is not much to say when it comes to the
 
 ### Introduction
 
-I Will look at the differences between the playlist that spotify made for me showcasing the songs I listened to the most in 2018 and 2019. I will look at Bpm, create different types of chromagrams etc to figure out how my music taste varid between the years and what we can see about how spotify clusters songs. 
+I Will look at the differences between the playlist that spotify made for me showcasing the 100 songs I listened to the most in 2018 and 2019. I will look at Bpm, create different types of chromagrams etc to figure out how my music taste varid between the years and what we can see about how spotify clusters songs. 
 
 ```{r}
 top_2019 <- get_playlist_audio_features('spotify', '37i9dQZF1EtjMPagkNcPdg')
@@ -380,7 +387,7 @@ ggplotly(top_songs_interactive)
 
 ***
 
-Write something about the graph here. 
+Here we can clearly see that the songs from 2019 are more spread out and differ more in danceabilty whereas in the 2018 playlist the dots are more clustered towards higher values in danceability.
 
 ```{r}
 top_songs%>%

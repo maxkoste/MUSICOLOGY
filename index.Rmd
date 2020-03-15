@@ -19,11 +19,11 @@ library(shinydashboard)
 library(ggjoy)
 source('spotify.R')
 
-stones_old <- get_playlist_audio_features('spotify', '4M2hsYvNxtTQYYdJXM7nZf')
-stones_new <- get_playlist_audio_features('spotify', '5O8ZKa73hlfLYXnRLbU1xk')
+top_2019 <- get_playlist_audio_features('spotify', '37i9dQZF1EtjMPagkNcPdg')
+top_2018 <- get_playlist_audio_features('spotify', '37i9dQZF1EjycNLJDHXHis')
 
-stones <- stones_old %>% mutate(playlist = "stones_old") %>%
-  bind_rows(stones_new %>% mutate(playlist = "stones_new"))
+top_songs <- top_2019 %>% mutate(playlist = "top 2019") %>%
+  bind_rows(top_2018 %>% mutate(playlist = "top 2018"))
 
 theme_max <- function() {
   theme_minimal() +
@@ -38,6 +38,38 @@ theme_max <- function() {
 }
 
 ```
+
+### tempogram for Mean Mr Mustard shows us what tempo the song is in. 
+```{r}
+mean_mr_mustard <- get_tidy_audio_analysis('4JOyMhad5dD81uGYLGgKrS')
+```
+
+```{r}
+
+mean_mr_mustard %>% 
+    tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) %>% 
+    ggplot(aes(x = time, y = bpm, fill = power)) + 
+    geom_raster() + 
+    scale_fill_viridis_c(guide = 'none') +
+  ggtitle("Fourier based tempogram") +
+    labs(x = 'Time (s)', y = 'Tempo (BPM)') +
+    theme_max()
+
+
+mean_mr_mustard %>% 
+    tempogram(window_size = 8, hop_size = 1, cyclic = TRUE) %>% 
+    ggplot(aes(x = time, y = bpm, fill = power)) + 
+    geom_raster() + 
+    scale_fill_viridis_c(guide = 'none') +
+  ggtitle("Cyclic Tempogram") +
+    labs(x = 'Time (s)', y = 'Tempo (BPM)') +
+    theme_max()
+
+```
+
+
+*** 
+Here we get a clear reading that the bpm is 200 together with a bpm harmonic that says 400. From my knowledge of the song I would say that the bpm is around 100bpm with the markings at 200 and 400 both being bpm harmonics. Wrapping into a cyclic tempogram gets rid of this and shows us that the actual tempo is 100bpm which was suspected. The reason for this clean reading is probably the fact that there are drums present throughout the whole track. The song starts of with a drumfill that you can see as a dipp in the begining of both spectograms. 
 
 ### Looking at keys and noticing that Mean Mr Mustard by the beatles doesnt like to get keyprofiled. 
 ```{r}
@@ -143,11 +175,12 @@ mr_mustard %>%
     ggplot(
         aes(x = start + duration / 2, width = duration, y = name, fill = d)) +
     geom_tile() +
-    scale_fill_viridis_c(option = 'E', guide = 'none') +
+    scale_fill_viridis_c(option = 'B', guide = 'none') +
+  ggtitle("Mean Mr Mustard") + 
     theme_max() +
     labs(x = 'Time (s)', y = '')
 
-stones%>% 
+top_songs%>% 
   ggplot(aes(x = key_name, fill = key_mode)) + 
   geom_histogram(stat = "count") + 
   facet_wrap("playlist") + 
@@ -160,11 +193,11 @@ stones%>%
 
 *** 
 
-Mean Mr Mustard is the song with the highest valence in our corpus so lets look at its key structure. 
+Mean Mr Mustard is one of the song with the highest valence in our corpus so lets look at its key structure. 
 
 ```{r}
 
-stones%>%
+top_songs%>%
   arrange(-valence)%>%
   select(track.name, valence)%>%
   head(5)%>%
@@ -179,27 +212,27 @@ On the histogram we see the number of different keys in our corpus together with
 
 In the old albums C, D and G major are the clear favourites but in the modern albums we see more minor keys but the most popular key is still in a major key, C# major. 
 
-### What is the SD and Mean Bpm between our old and modern hits? 
+### What is the SD and Mean Bpm between our playlists? 
 ```{r}
-stones_old_analysis <-
+top_2019_analysis <-
     get_playlist_audio_features(
-        'rollingstones_old', 
-        '4M2hsYvNxtTQYYdJXM7nZf') %>% 
+        'Your  Top Songs 2019', 
+        '37i9dQZF1EtjMPagkNcPdg') %>% 
     slice(1:30) %>% 
     add_audio_analysis()
-stones_new_analysis <-
+top_2018_analysis <-
     get_playlist_audio_features(
-        'rollingstones_new', 
-        '5O8ZKa73hlfLYXnRLbU1xk') %>% 
+        'Your Top Songs 2018', 
+        '37i9dQZF1EjycNLJDHXHis') %>% 
     slice(1:30) %>% 
     add_audio_analysis()
-pop_music <-
-    stones_old_analysis %>% mutate(Released = "60s/70s") %>%
-    bind_rows(stones_new_analysis %>% mutate(Released = "2010s"))
+top_songs_analysis <-
+    top_2019_analysis %>% mutate(year = "2019") %>%
+    bind_rows(top_2018_analysis %>% mutate(year = "2018"))
 ```
 
 ```{r}
-pop_music %>% 
+top_songs_analysis %>% 
     mutate(
         sections = 
             map(
@@ -212,7 +245,7 @@ pop_music %>%
         aes(
             x = tempo, 
             y = tempo_section_sd, 
-            colour = Released, 
+            colour = year, 
             alpha = loudness)) +
     geom_point(aes(size = duration / 60)) + 
     geom_rug() + 
@@ -221,7 +254,7 @@ pop_music %>%
     labs(
         x = 'Mean Tempo (bpm)', 
         y = 'SD Tempo', 
-        colour = 'Released', 
+        colour = 'Year', 
         size = 'Duration (min)', 
         alpha = 'Volume (dBFS)')
 
@@ -232,9 +265,9 @@ pop_music %>%
 ***
 Here we look at some of the different metrics in between our playlist with popular albums from the 60s/70s and compare it to our popular modern albums. Our goal here is to look at the standard deviation and our mean when it comes to tempo. For investigation I've added some more dimensions to the data with Duration in min and volume. 
 
-### Looking at Timbre Coefficent between the old and new albums
+### Looking at Timbre Coefficent between both playlists
 ```{r}
-pop_music %>% 
+top_songs_analysis %>% 
     mutate(
         timbre =
             map(
@@ -242,24 +275,24 @@ pop_music %>%
                 compmus_summarise,
                 timbre,
                 method = 'mean')) %>%
-    select(Released, timbre) %>% 
+    select(year, timbre) %>% 
     compmus_gather_timbre %>% 
-    ggplot(aes(x = basis, y = value, fill = Released)) +
+    ggplot(aes(x = basis, y = value, fill = year)) +
     geom_violin() +
     theme_max ()+
     scale_fill_viridis_d() +
-    labs(x = 'Spotify Timbre Coefficients', y = '', fill = 'Released')
+    labs(x = 'Spotify Timbre Coefficients', y = '', fill = 'Year')
 ```
 
 ***
 
 Looking at this we see that there is actually some difference in timbre between the old and the new which comes to no surprise. Around c02 there is a lot of difference in how the value is concentrated, but we also see similairites in the values above c06.
 
-### Otis reading rock me baby
+### Tom Mish followed me throughout the years so lets look at the timbre of the song
 
 ```{r}
 bzt <- 
-    get_tidy_audio_analysis('0OY4ztej0wqS7AF2pHHtCu') %>% 
+    get_tidy_audio_analysis('4A7DUET5H4f7dJkUhjfVFB') %>% 
     compmus_align(bars, segments) %>% 
     select(bars) %>% unnest(bars) %>% 
     mutate(
@@ -289,10 +322,7 @@ bzt %>%
     labs(x = 'Time (s)', y = NULL, fill = 'Magnitude') +
     scale_fill_viridis_c(option = 'E') +
     theme_max()
-```
 
-
-```{r}
 bzt %>% 
     compmus_self_similarity(timbre, 'cosine') %>% 
     ggplot(
@@ -305,87 +335,39 @@ bzt %>%
     geom_tile() +
     coord_fixed() +
     scale_fill_viridis_c(option = 'E', guide = 'none') +
+  ggtitle("Self Similairity Matric") +
     theme_max() +
     labs(x = '', y = '')
+
 ```
+
 
 ***
 
-Here we can see when the horns take up more space in the mix which is indicated by a the same change in the overal timbre of the song by the yellow area between 100-150s. Otherwise the song is very similiar throughout the piece without much difference between the choruses and the verses. 
-
-### The division of valence between the old albums
-
-```{r}
-
-
-
-stones <- stones_old %>% mutate(playlist = "stones_old") %>%
-  bind_rows(stones_new %>% mutate(playlist = "stones_new"))
-
-ggplot(stones_old, aes(x = valence, y = track.album.name)) + 
-  geom_joy() + 
-  theme_joy() +
-  ggtitle("Old Albums")+
-  theme_max()+
-  theme(plot.margin = margin(1 ,1 , 1, 1, "cm"), axis.text = element_text(size = 5))+
-  labs(y = "Album Names", x = "Valence")
-  
-ggplot(stones_new, aes(x = valence, y = track.album.name)) + 
-  geom_joy() + 
-  theme_joy() +
-  ggtitle("New Albums")+
-  theme_max()+
-  theme(plot.margin = margin(1 ,1 , 1, 1, "cm"), axis.text = element_text(size = 10))+
-  labs(y = "Album Names", x = "Valence")
-
-```
-
-***
-the division of valence is quite varied amongst the albums and only dark side of the moon seems to be extreme in being concentrated towards the lower end of the spectrum. Hotel california is also interseting since its valence is divided on each end of the spectrum without any concentration in the middle. Here is also the mean valence of the 5 albums with the highest mean. 
-
-```{r}
-stones_old%>%
-  arrange(-valence)%>%
-  select(track.album.name, valence)%>%
-  head(5)%>%
-  kable()
-```
-
-Where the older albums were varied the newer albums are more predictable since they are more or less centered towards the middle of the scale with variying degrees of concentration. The albums are either in the middle or towards the lower end of the spectrum. maybe indicating a shift in trends towards more gloomy music. Here we can also see values for the 5 albums with the highest mean valence.
-
-```{r}
-stones_new%>%
-  arrange(-valence)%>%
-  select(track.album.name, valence)%>%
-  head(5)%>%
-  kable()
-
-```
+This song is pretty repeatative so there is not much to say when it comes to the change in timbre. However the changes we do see tells us something about the different segments in the song. This is especially clear in the self similairity matric. Maybe the attractiveness of this song is its clear structure and repeatative nature that made it stick with me throughout 2018 and 2019. Although his guitarplaying also plays a big role. 
 
 ### Introduction
 
-What makes a succesfull album. I will look at some of the most iconic and top rated albums pulling data from the rolling stones magazine top 500 list of albums and then comparing their characteristics to a similair list by the rolling stones magazine from the 2000s. 
-
-We will check for features and similarities between succesfull albums that can be observed. This will be done by gathering data from Spotify from a selection of succesfull albums from the 70s and 60s. This will then be compared to the top albums of the 2000s also from the rolling stones. 
+I Will look at the differences between the playlist that spotify made for me showcasing the songs I listened to the most in 2018 and 2019. I will look at Bpm, create different types of chromagrams etc to figure out how my music taste varid between the years and what we can see about how spotify clusters songs. 
 
 ```{r}
-stones_old <- get_playlist_audio_features('spotify', '4M2hsYvNxtTQYYdJXM7nZf')
-stones_new <- get_playlist_audio_features('spotify', '5O8ZKa73hlfLYXnRLbU1xk')
+top_2019 <- get_playlist_audio_features('spotify', '37i9dQZF1EtjMPagkNcPdg')
+top_2018 <- get_playlist_audio_features('spotify', '37i9dQZF1EjycNLJDHXHis')
 
+top_songs <- top_2019 %>% mutate(playlist = "top 2019") %>%
+  bind_rows(top_2018 %>% mutate(playlist = "top 2018"))
 
-stones <- stones_old %>% mutate(playlist = "stones_old") %>%
-  bind_rows(stones_new %>% mutate(playlist = "stones_new"))
 ```
 
 
-### The newer tracks are louder but not that much more danceable
+### Looks like I danced less, atleast listed to less danceable music
 
 
 ```{r}
 
 
-Rock <-
-stones %>%
+top_songs_interactive <-
+top_songs %>%
   ggplot(aes(x = danceability, y = loudness, col = playlist, label = track.name, size = (valence/energy))) + 
   geom_point(alpha = 0.6, position = "jitter") + 
   geom_rug(size = 0.1)+
@@ -393,15 +375,15 @@ stones %>%
   theme_max()
 
 
-ggplotly(Rock)
+ggplotly(top_songs_interactive)
 ```
 
 ***
 
-In this graph we see that the loudest songs in our data set comes from the new playlist and the more quiet outliers on the loudness scale are simialir between both the new and the old, with the exeption of an more extreme outlier on the old playlist down by the bottom of the y axis. The newer songs also seems to be higher in danceablity being more clustered towards the end of the x-axis while the older songs are more centered on the x-axis. Alot of the more energetic/high in valence songs are also amongst the newer releases but there is not a big difference between the two. 
+Write something about the graph here. 
 
 ```{r}
-stones%>%
+top_songs%>%
   arrange(-valence)%>%
   select(track.name, valence)%>%
   head(5)%>%
@@ -418,7 +400,7 @@ stones%>%
 ```{r}
 
 wo <- 
-    get_tidy_audio_analysis('0pNeVovbiZHkulpGeOx1Gj') %>% 
+    get_tidy_audio_analysis('4A7DUET5H4f7dJkUhjfVFB') %>% 
     select(segments) %>% unnest(segments) %>% 
     select(start, duration, pitches)
 
@@ -433,16 +415,15 @@ wo %>%
             fill = value)) + 
     geom_tile() +
     labs(x = 'Time (s)', y = NULL, fill = 'Magnitude') +
-    theme_minimal()
+    theme_max()
 ```
 
 ***
 
-A chromagram of the song Something by the beatles. We see here that the song is in C major and there seems to be a key change even to A major only to then return to C major again in the outro. 
+This is a chromagram of the song lost in paris by Tom Misch
 
 
 
 
 ### Conclusion
-From what I have found the most noticeble difference is that the music is louder and more spread out when it comes to valence and energy. Also the difference in danceability between tracks are higher. 
-
+Fill in when you have all the necessary information and data

@@ -44,6 +44,7 @@ theme_max <- function() {
 ```
 
 ### homework week 12
+
 ```{r}
 p2018 <- 
     get_playlist_audio_features('spotify', '37i9dQZF1EtjMPagkNcPdg') %>% 
@@ -98,11 +99,11 @@ top_class <-
                `G#|Ab` + A + `A#|Bb` + B +
                c01 + c02 + c03 + c04 + c05 + c06 +
                c07 + c08 + c09 + c10 + c11 + c12,
-           data = indie) %>% 
+           data = top) %>% 
     step_center(all_predictors()) %>%
     step_scale(all_predictors()) %>%
     # step_range(all_predictors()) %>% 
-    prep(indie) %>% 
+    prep(top) %>% 
     juice
 ```
 
@@ -120,7 +121,7 @@ predict_knn <- function(split)
     bind_cols(assessment(split))
 ```
 
-```{r}
+```{r echo = FALSE}
 top_cv %>% 
     mutate(pred = map(splits, predict_knn)) %>% unnest(pred) %>% 
     conf_mat(truth = playlist, estimate = .pred_class)
@@ -131,14 +132,28 @@ top_cv %>%
     mutate(pred = map(splits, predict_knn)) %>% unnest(pred) %>% 
     conf_mat(truth = playlist, estimate = .pred_class) %>% 
     autoplot(type = 'mosaic')
-```
 
-```{r}
 top_cv %>% 
     mutate(pred = map(splits, predict_knn)) %>% unnest(pred) %>% 
     conf_mat(truth = playlist, estimate = .pred_class) %>% 
     autoplot(type = 'heatmap')
+
+top %>%
+    ggplot(aes(x = c12, y = c03, colour = playlist, size = acousticness)) +
+    geom_point(alpha = 0.8) +
+    theme_max()+
+    scale_color_brewer(type = 'qual', palette = 'Dark2') +
+    labs(
+        x = 'Timbre Component c12', 
+        y = 'Timbre Component c03', 
+        size = 'Acousticness', 
+        colour = 'Playlist'
+    )
 ```
+
+***
+
+I found similairites in timbre component c12 and c03 so I included them in a plot where acousticness is also compared by indication of size, which was also found to be a simialirity between the two playlists. The newer playlist is way higher on average when it comes to timbre component c12 then the 2018 playlist that is more clustered towards he low end. When it comes to timbre component c03 there is more of a similairity. 
 
 ```{r}
 top_cv %>% 
@@ -146,7 +161,7 @@ top_cv %>%
     metric_set(accuracy, kap, j_index)(truth = playlist, estimate = .pred_class)
 ```
 
-```{r}
+```{r eval = FALSE}
 top_logistic <- 
     logistic_reg(mode = 'classification') %>% 
     set_engine('glm')
@@ -156,7 +171,7 @@ predict_logistic <- function(split)
     bind_cols(assessment(split))
 ```
 
-```{r}
+```{r eval = FALSE}
 top_multinom <- 
     multinom_reg(mode = 'classification', penalty = 0.1) %>% 
     set_engine('glmnet')
@@ -164,19 +179,6 @@ predict_multinom <- function(split)
     fit(top_multinom, playlist ~ ., data = analysis(split)) %>% 
     predict(assessment(split), type = 'class') %>%
     bind_cols(assessment(split))
-```
-
-```{r}
-top_cv %>% 
-    mutate(pred = map(splits, predict_multinom)) %>% unnest(pred) %>% 
-    metric_set(accuracy, kap, j_index)(truth = playlist, estimate = .pred_class)
-```
-
-```{r}
-top_class %>%
-    fit(top_multinom, playlist ~ ., data = .) %>%
-    pluck('fit') %>%
-    coef(s = 0)
 ```
 
 ```{r}
@@ -189,11 +191,6 @@ predict_tree <- function(split)
     bind_cols(assessment(split))
 ```
 
-```{r}
-top_cv %>% 
-    mutate(pred = map(splits, predict_tree)) %>% unnest(pred) %>% 
-    metric_set(accuracy, kap, j_index)(truth = playlist, estimate = .pred_class)
-```
 
 ```{r}
 top_class %>% 
@@ -212,14 +209,14 @@ predict_forest <- function(split)
     bind_cols(assessment(split))
 ```
 
-```{r}
+```{r eval = FALSE}
 top_cv %>% 
     mutate(pred = map(splits, predict_forest)) %>% 
     unnest(pred) %>% 
     metric_set(accuracy, kap, j_index)(truth = playlist, estimate = .pred_class)
 ```
 
-```{r}
+```{r eval = FALSE}
 predict_knn_reduced <- function(split)
     fit(
         top_knn, 
@@ -231,33 +228,6 @@ top_cv %>%
     mutate(pred = map(splits, predict_knn_reduced)) %>% unnest(pred) %>% 
     metric_set(accuracy, kap, j_index)(truth = playlist, estimate = .pred_class)
 ```
-
-```{r}
-top_cv %>% 
-    mutate(pred = map(splits, predict_knn_reduced)) %>% unnest(pred) %>% 
-    conf_mat(truth = playlist, estimate = .pred_class) %>% 
-    autoplot(type = 'mosaic')
-```
-
-```{r}
-top %>%
-    ggplot(aes(x = c12, y = c03, colour = playlist, size = liveness)) +
-    geom_point(alpha = 0.8) +
-    scale_color_brewer(type = 'qual', palette = 'Accent') +
-    labs(
-        x = 'Timbre Component c12', 
-        y = 'Timbr Component c03', 
-        size = 'Liveness', 
-        colour = 'Playlist'
-    )
-```
-
-
-
-
-
-
-
 
 
 ### tempogram for Mean Mr Mustard shows us what tempo the song is in. 

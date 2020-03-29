@@ -43,7 +43,161 @@ theme_max <- function() {
 
 ```
 
-### homework week 12
+### Introduction
+
+```{r}
+top_2019 <- 
+  get_playlist_audio_features('spotify', '37i9dQZF1EtjMPagkNcPdg')
+  
+top_2018 <-
+  get_playlist_audio_features('spotify', '37i9dQZF1EjycNLJDHXHis')
+
+top_songs <- top_2019 %>% mutate(playlist = "top 2019") %>%
+  bind_rows(top_2018 %>% mutate(playlist = "top 2018"))
+
+ggplot(top_songs, aes(y = danceability, x = playlist, fill = playlist)) + 
+  geom_violin() + 
+  facet_wrap('playlist') + 
+  theme_max() +
+  labs(
+        x = 'Playlist', 
+        y = 'Danceability', 
+        colour = 'Playlist'
+    ) +
+  ggtitle("Violin plot of danceability")
+
+ggplot(top_songs, aes(y = liveness, x = playlist, fill = playlist)) + 
+  geom_violin() + 
+  facet_wrap('playlist') + 
+  theme_max() +
+  labs(
+        x = 'Playlist', 
+        y = 'Liveness', 
+        colour = 'Playlist'
+    ) +
+  ggtitle("Violin plot of liveness")
+
+ggplot(top_songs, aes(y = energy, x = playlist, fill = playlist)) + 
+  geom_violin() + 
+  facet_wrap('playlist') + 
+  theme_max() +
+  labs(
+        x = 'Playlist', 
+        y = 'Energy', 
+        colour = 'Playlist'
+    ) +
+  ggtitle("Violin plot of energy")
+
+ggplot(top_songs, aes(y = loudness, x = playlist, fill = playlist)) + 
+  geom_violin() + 
+  facet_wrap('playlist') + 
+  theme_max() +
+  labs(
+        x = 'Playlist', 
+        y = 'Loudness', 
+        colour = 'Playlist'
+    ) +
+  ggtitle("Violin plot of loudness")
+
+ggplot(top_songs, aes(y = speechiness, x = playlist, fill = playlist)) + 
+  geom_violin() + 
+  facet_wrap('playlist') + 
+  theme_max() +
+  labs(
+        x = 'Playlist', 
+        y = 'Speechiness', 
+        colour = 'Playlist'
+    ) +
+  ggtitle("Violin plot of speechiness")
+
+ggplot(top_songs, aes(y = acousticness, x = playlist, fill = playlist)) + 
+  geom_violin() + 
+  facet_wrap('playlist') + 
+  theme_max() +
+  labs(
+        x = 'Playlist', 
+        y = 'Acousticness', 
+        colour = 'Playlist'
+    ) +
+  ggtitle("Violin plot of acousticness")
+
+ggplot(top_songs, aes(y = instrumentalness, x = playlist, fill = playlist)) + 
+  geom_violin() + 
+  facet_wrap('playlist') + 
+  theme_max() +
+  labs(
+        x = 'Playlist', 
+        y = 'Instrumentalness', 
+        colour = 'Playlist'
+    ) +
+  ggtitle("Violin plot of instrumentalness")
+
+ggplot(top_songs, aes(y = valence, x = playlist, fill = playlist)) + 
+  geom_violin() + 
+  facet_wrap('playlist') + 
+  theme_max() +
+  labs(
+        x = 'Playlist', 
+        y = 'Valence', 
+        colour = 'Playlist'
+    ) +
+  ggtitle("Violin plot of valence")
+
+ggplot(top_songs, aes(y = tempo, x = playlist, fill = playlist)) + 
+  geom_violin() + 
+  facet_wrap('playlist') + 
+  theme_max() +
+  labs(
+        x = 'Playlist', 
+        y = 'Tempo', 
+        colour = 'Playlist'
+    ) +
+  ggtitle("Violin plot of tempo")
+
+ggplot(top_songs, aes(x = key, fill = playlist)) + 
+  geom_histogram() + 
+  theme_max() +
+  facet_wrap("playlist") + 
+  labs(
+        x = 'Key', 
+        y = 'Count', 
+        colour = 'Playlist'
+    ) +
+  ggtitle("histogram of keys")
+```
+
+
+***
+
+I Will look at the differences between the playlist that spotify made for me showcasing the 100 songs I listened to the most in 2018 and 2019. I will look at Bpm, create different types of chromagrams etc to figure out how my music taste varid between the years. First we start with our data. We use use track features from spotifyr to investigate what differences and similairities that we can observe between both playlists. I have combined both playlst into one dataset in order to give a good insight into some of the features from spotifyr and get a quick overview of which of these may be show some clear differences between the playlists.
+
+The track features that might be usefull are the following:
+
+-Danceability
+
+-Energy
+
+-Loudness
+
+-Speechiness
+
+-Accousticness
+
+-Instrumentalness
+
+-Liveness
+
+-Valence
+
+-Tempo
+
+-Key
+
+Noticable differences from the violin plots:
+
+The tempo is lower overall in the newer playlist and valence is higher. There is also alot of quiter tracks in the newer playlist which might indicate that there are more old songs in that playlist that are mastered at a lower volume. 
+
+### Building a model for predicting the most important features. 
 
 ```{r}
 p2018 <- 
@@ -129,7 +283,7 @@ top_cv %>%
 
 ```{r}
 top_cv %>% 
-    mutate(pred = map(splits, predict_knn)) %>% unnest(pred) %>% 
+   mutate(pred = map(splits, predict_knn)) %>% unnest(pred) %>% 
     conf_mat(truth = playlist, estimate = .pred_class) %>% 
     autoplot(type = 'mosaic')
 
@@ -138,24 +292,45 @@ top_cv %>%
     conf_mat(truth = playlist, estimate = .pred_class) %>% 
     autoplot(type = 'heatmap')
 
+top_forest <- 
+    rand_forest(mode = 'classification') %>% 
+    set_engine('randomForest')
+predict_forest <- function(split)
+    fit(top_forest, playlist ~ ., data = analysis(split)) %>% 
+    predict(assessment(split), type = 'class') %>%
+    bind_cols(assessment(split))
+
+top_class %>% 
+    fit(top_forest, playlist ~ ., data = .) %>% 
+    pluck('fit') %>% 
+    randomForest::varImpPlot()+
+    theme_max()
+
+```
+
+
+***
+
+This graphs shows the importance of each predictor when building the model, all predictors are currently visible and can be roughly divided into three groups: - Spotify general features like Acousticness, Valence, Danceability etc, Timbre features and Key features. 
+It shows that timbre features c02, c012 and c04 together with acousticness and the key feature G# are the best predictors for our model ranked in importance with mean deacrease gini, ranging from 0.0 t0 1.0. 
+
+### Ploting Liveness and Acousticness from what our model predicted 
+
+```{r}
 top %>%
-    ggplot(aes(x = c12, y = c03, colour = playlist, size = acousticness)) +
+    ggplot(aes(x = acousticness, y = liveness, colour = playlist, size = c02)) +
     geom_point(alpha = 0.8) +
     theme_max()+
     scale_color_brewer(type = 'qual', palette = 'Dark2') +
     labs(
-        x = 'Timbre Component c12', 
-        y = 'Timbre Component c03', 
-        size = 'Acousticness', 
+        x = 'Acousticness', 
+        y = 'Liveness', 
+        size = 'Timbre Feature c02', 
         colour = 'Playlist'
     )
 ```
 
-***
-
-I found similairites in timbre component c12 and c03 so I included them in a plot where acousticness is also compared by indication of size, which was also found to be a simialirity between the two playlists. The newer playlist is way higher on average when it comes to timbre component c12 then the 2018 playlist that is more clustered towards he low end. When it comes to timbre component c03 there is more of a similairity. 
-
-```{r}
+```{r eval = FALSE}
 top_cv %>% 
     mutate(pred = map(splits, predict_knn)) %>% unnest(pred) %>% 
     metric_set(accuracy, kap, j_index)(truth = playlist, estimate = .pred_class)
@@ -181,7 +356,7 @@ predict_multinom <- function(split)
     bind_cols(assessment(split))
 ```
 
-```{r}
+```{r eval = FALSE}
 top_tree <- 
     decision_tree(mode = 'classification') %>%
     set_engine('C5.0')
@@ -192,14 +367,14 @@ predict_tree <- function(split)
 ```
 
 
-```{r}
+```{r eval = FALSE}
 top_class %>% 
     fit(top_tree, playlist ~ ., data = .) %>% 
     pluck('fit') %>%
     summary
 ```
 
-```{r}
+```{r eval = FALSE}
 top_forest <- 
     rand_forest(mode = 'classification') %>% 
     set_engine('randomForest')
@@ -229,8 +404,12 @@ top_cv %>%
     metric_set(accuracy, kap, j_index)(truth = playlist, estimate = .pred_class)
 ```
 
+***
 
-### tempogram for Mean Mr Mustard shows us what tempo the song is in. 
+The dotplot indicates that we have some outliers in our newer but mainly the 2018 playlist that are quite high in acousticness. The 2019 playlist is mainly clustered towards the lower end of the spectrum when it comes to cousticness and liveness which would indicate a deacrease in more live and instrumental heavy music in the 2018 playlist towards more electronic music in the 2019 playlist. 
+
+### Creating a temporgram for the song mean mr mustard in the corpus and looking at the overall tempo of both playlists
+
 ```{r}
 mean_mr_mustard <- get_tidy_audio_analysis('4JOyMhad5dD81uGYLGgKrS')
 ```
@@ -259,7 +438,7 @@ mean_mr_mustard %>%
 top_songs %>%
   ggplot(aes(x = tempo, fill = playlist)) + 
   geom_histogram()+ 
-  ggtitle("Tempo") + 
+  ggtitle("Tempogram for both playlist") + 
   facet_wrap("playlist") + 
   theme_max()
 
@@ -269,7 +448,7 @@ top_songs %>%
 *** 
 Here we get a clear reading that the bpm is 200 together with a bpm harmonic that says 400. From my knowledge of the song I would say that the bpm is around 100bpm with the markings at 200 and 400 both being bpm harmonics. Wrapping into a cyclic tempogram gets rid of this and shows us that the actual tempo is 100bpm which was suspected. The reason for this clean reading is probably the fact that there are drums present throughout the whole track. The song starts of with a drumfill that you can see as a dipp in the begining of both spectograms. 
 
-### Looking at keys and noticing that Mean Mr Mustard by the beatles doesnt like to get keyprofiled. 
+### Creating a keygram for mean mr mustard. 
 ```{r}
 circshift <- function(v, n) {if (n == 0) v else c(tail(v, n), head(v, -n))}
                                     
@@ -374,7 +553,6 @@ mr_mustard %>%
         aes(x = start + duration / 2, width = duration, y = name, fill = d)) +
     geom_tile() +
     scale_fill_viridis_c(option = 'B', guide = 'none') +
-  ggtitle("Mean Mr Mustard") + 
     theme_max() +
     labs(x = 'Time (s)', y = '')
 
@@ -404,89 +582,11 @@ top_songs%>%
 
 ```
 
-As we can see it is giving use some strange readings since we have both G#m and G in the same section which is very strange. The piece is analysied from bigger segments in order to figure out what key it is in. I will have to further investigate by trying different combinations of normalisations and distances. 
+As we can see we get a reading that is strong on both G# and G which is because both keys are very close to each other, only being one semitone apart.
 
-On the histogram we see the number of different keys in our corpus together with if its minor or major indicated by colour. Could not get the colour to be either major/minor, will have to look in to that soo I dont have 1000 colour profiles. 
+On the histogram we see the number of different keys in our corpus together with if its minor or major indicated by colour. 
 
-
-
-### What is the SD and Mean Bpm between our playlists? 
-```{r}
-top_2019_analysis <-
-    get_playlist_audio_features(
-        'Your  Top Songs 2019', 
-        '37i9dQZF1EtjMPagkNcPdg') %>% 
-    slice(1:30) %>% 
-    add_audio_analysis()
-top_2018_analysis <-
-    get_playlist_audio_features(
-        'Your Top Songs 2018', 
-        '37i9dQZF1EjycNLJDHXHis') %>% 
-    slice(1:30) %>% 
-    add_audio_analysis()
-top_songs_analysis <-
-    top_2019_analysis %>% mutate(year = "2019") %>%
-    bind_rows(top_2018_analysis %>% mutate(year = "2018"))
-```
-
-```{r}
-top_songs_analysis %>% 
-    mutate(
-        sections = 
-            map(
-                sections, 
-                summarise_at, 
-                vars(tempo, loudness, duration), 
-                list(section_mean = mean, section_sd = sd))) %>% 
-    unnest(sections) %>%
-    ggplot(
-        aes(
-            x = tempo, 
-            y = tempo_section_sd, 
-            colour = year, 
-            alpha = loudness)) +
-    geom_point(aes(size = duration / 60)) + 
-    geom_rug() + 
-    theme_max() +
-    ylim(0, 5) + 
-    labs(
-        x = 'Mean Tempo (bpm)', 
-        y = 'SD Tempo', 
-        colour = 'Year', 
-        size = 'Duration (min)', 
-        alpha = 'Volume (dBFS)')
-
-
-```
-
-
-***
-Here we look at some of the different metrics in between our playlist with popular albums from the 60s/70s and compare it to our popular modern albums. Our goal here is to look at the standard deviation and our mean when it comes to tempo. For investigation I've added some more dimensions to the data with Duration in min and volume. 
-
-### Looking at Timbre Coefficent between both playlists
-```{r}
-top_songs_analysis %>% 
-    mutate(
-        timbre =
-            map(
-                segments,
-                compmus_summarise,
-                timbre,
-                method = 'mean')) %>%
-    select(year, timbre) %>% 
-    compmus_gather_timbre %>% 
-    ggplot(aes(x = basis, y = value, fill = year)) +
-    geom_violin() +
-    theme_max ()+
-    scale_fill_viridis_d() +
-    labs(x = 'Spotify Timbre Coefficients', y = '', fill = 'Year')
-```
-
-***
-
-Looking at this we see that there is actually some difference in timbre between the old and the new which comes to no surprise. Around c02 there is a lot of difference in how the value is concentrated, but we also see similairites in the values above c06.
-
-### Tom Mish followed me throughout the years so lets look at the timbre of the song
+### Tom Mish followed me throughout the years so lets look at the timbre and key of the song "lost in Paris"
 
 ```{r}
 bzt <- 
@@ -537,65 +637,6 @@ bzt %>%
     theme_max() +
     labs(x = '', y = '')
 
-```
-
-
-***
-
-This song is pretty repeatative so there is not much to say when it comes to the change in timbre. However the changes we do see tells us something about the different segments in the song. This is especially clear in the self similairity matric. Maybe the attractiveness of this song is its clear structure and repeatative nature that made it stick with me throughout 2018 and 2019. Although his guitarplaying also plays a big role. 
-
-### Introduction
-
-I Will look at the differences between the playlist that spotify made for me showcasing the 100 songs I listened to the most in 2018 and 2019. I will look at Bpm, create different types of chromagrams etc to figure out how my music taste varid between the years and what we can see about how spotify clusters songs. 
-
-```{r}
-top_2019 <- get_playlist_audio_features('spotify', '37i9dQZF1EtjMPagkNcPdg')
-top_2018 <- get_playlist_audio_features('spotify', '37i9dQZF1EjycNLJDHXHis')
-
-top_songs <- top_2019 %>% mutate(playlist = "top 2019") %>%
-  bind_rows(top_2018 %>% mutate(playlist = "top 2018"))
-
-```
-
-
-### Looks like I danced less, atleast listed to less danceable music
-
-
-```{r}
-
-
-top_songs_interactive <-
-top_songs %>%
-  ggplot(aes(x = danceability, y = loudness, col = playlist, label = track.name, size = (valence/energy))) + 
-  geom_point(alpha = 0.6, position = "jitter") + 
-  geom_rug(size = 0.1)+
-  facet_wrap('playlist')+
-  theme_max()
-
-
-ggplotly(top_songs_interactive)
-```
-
-***
-
-Here we can clearly see that the songs from 2019 are more spread out and differ more in danceabilty whereas in the 2018 playlist the dots are more clustered towards higher values in danceability.
-
-```{r}
-top_songs%>%
-  arrange(-valence)%>%
-  select(track.name, valence)%>%
-  head(5)%>%
-  kable()
-
-```
-
-
-
-
-
-### Chromagram {data-commentary-width=400}
-
-```{r}
 
 wo <- 
     get_tidy_audio_analysis('4A7DUET5H4f7dJkUhjfVFB') %>% 
@@ -616,12 +657,53 @@ wo %>%
     theme_max()
 ```
 
+
 ***
 
-This is a chromagram of the song lost in paris by Tom Misch
+This song is pretty repeatative so there is not much to say when it comes to the change in timbre. However the changes we do see tells us something about the different segments in the song. This is especially clear in the self similairity matric. Maybe the attractiveness of this song is its clear structure and repeatative nature that made it stick with me throughout 2018 and 2019. Although his guitarplaying also plays a big role. 
+
+The chromagram of the song lost in paris by Tom Misch. The readings are not that clear but we see some activity on C#, F#, B and E which would indicate that this song is in the key of E major. Which is also what I hear when I listen to the song. The chromogram works by 
+
+### Looks like I danced less, atleast listed to less danceable music
+```{r}
+
+top_songs %>%
+  ggplot(aes(x = acousticness, y = danceability, col = playlist, label = track.name, size = valence)) + 
+  geom_point(alpha = 0.6, position = "jitter") + 
+  geom_rug(size = 0.1)+
+  facet_wrap('playlist') +
+  theme_max() + 
+  labs( x = "Acousticness",
+        y = "Danceability",
+        col = "Playlist", 
+        size = "Valence")
 
 
+top_songs %>%
+  ggplot(aes(x = danceability, y = valence, col = playlist, label = track.name)) + 
+  geom_boxplot(alpha = 0.6) + 
+  geom_rug(size = 0.1)+
+  facet_wrap('playlist') +
+  theme_max() + 
+  labs( x = "Danceability",
+        y = "Valence",
+        col = "Playlist")
+```
 
+***
+
+Here we can clearly see that the songs from 2019 are more spread out and differ more in danceabilty whereas in the 2018 playlist the dots are more clustered towards higher values in danceability. Since I moved in a more digital direction with my music taste between 2018 and 2019 I wanted to see what effect it had on the overall danceability. It seems as if it decreased between the two years. The plot is made by using a dataset i created that combines both playlist and then ploting it with danceability and acousticness, which was found to be a good predictor in the model I created. We can also see that the newer playlist is higher in valence which makes it a more happy sounding playlist while it has a lower mean danceability as we can see in the boxplot. 
+
+```{r}
+top_songs%>%
+  arrange(-valence)%>%
+  select(track.name, valence)%>%
+  head(5)%>%
+  kable()
+
+```
 
 ### Conclusion
-Fill in when you have all the necessary information and data
+The trend that have been noticed comes mainly from our prediction model that indicated when further investigated that there is a noticeable difference in acusticness and liveness which indicates a transition from more organically recorded music to a more electronic production. Although the change is not dramatic it is what could be suspected from one year to another. When it comes to timbre there were also differences found in c04, c12 and c02. When it comes to timbre however the findings are hard to interpret since any difference is only indicated by changes in energy. Therefore we cant establish any differenece in instrumentation from timbre alone. However was established by looking at the feautures from spotifyr instead. There is also a difference in valence between both playlist indicating a move towards more happy sounding music. 
+
+The tempo is lower overall in the newer playlist and valence is higher which we could see from the violin plots. There is also alot of quiter tracks in the newer playlist which might indicate that there are more old songs in that playlist that are mastered at a lower volume. However this doesnt necessarily contradict the conclusion that there is a trend towards more electronic music which is often mastered at higher volumes since there only seems to be a few tracks in that playlist mastered at a low volume. 
